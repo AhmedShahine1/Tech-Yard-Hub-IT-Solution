@@ -1,0 +1,103 @@
+body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+body #announcementSection .carousel-inner img {
+  width: 100%; /* Set the width of the carousel images */
+  height: 300px; /* Set the custom height for the carousel */
+  -o-object-fit: cover;
+     object-fit: cover; /* Ensure the images maintain their aspect ratio */
+}
+body #announcementSection .carousel-control-prev-icon,
+body #announcementSection .carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.5); /* Add a background color for visibility */
+  border-radius: 50%; /* Optional styling for rounded controls */
+}
+
+#filterContainer {
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+select,
+input[type=range] {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.row.grid-3 .product-card {
+  width: calc(33.33% - 15px); /* Adjust for spacing */
+  margin: 7.5px; /* Adjust for spacing */
+}
+.row.grid-5 .product-card {
+  width: calc(20% - 15px); /* Adjust for spacing */
+  margin: 7.5px; /* Adjust for spacing */
+}
+.row.list-view {
+  flex-direction: column;
+}
+.row.list-view .list-item {
+  margin-bottom: 15px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+.card .card-body {
+  padding: 20px;
+}
+.card .card-body h5.card-title {
+  color: #007bff;
+  font-weight: bold;
+}
+.card .card-body p.card-text {
+  margin-bottom: 5px;
+}
+
+.carousel-item .row {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+.carousel-item .row div {
+  background-color: #007bff;
+  color: white;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 5px;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .carousel-item .row {
+    flex-direction: column;
+  }
+  .carousel-item .row div {
+    margin: 5px 0;
+  }
+  #layout3Col,
+  #layout5Col,
+  #layoutList {
+    display: none; /* Hide layout buttons on small screens */
+  }
+}/*# sourceMappingURL=style.css.map */
