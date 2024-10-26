@@ -14,72 +14,107 @@ body #announcementSection .carousel-control-next-icon {
   border-radius: 50%; /* Optional styling for rounded controls */
 }
 
-#filterContainer {
+.products {
+  display: grid;
+  margin: 10px;
+}
+.products #filterContainer {
   background-color: #f7f7f7;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
 }
-
-label {
+.products .Filter {
+  align-items: baseline;
+  padding-right: 5%;
+  padding-left: 5%;
+}
+.products label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
   color: #007bff;
 }
-
-select,
-input[type=range] {
+.products select,
+.products input[type=range] {
   margin-top: 10px;
   margin-bottom: 20px;
 }
-
-.row {
+.products #sortProducts {
+  width: auto;
+}
+.products .row {
   display: flex;
   flex-wrap: wrap;
 }
-.row.grid-3 .product-card {
+.products .row.grid-3 .product-card {
   width: calc(33.33% - 15px); /* Adjust for spacing */
   margin: 7.5px; /* Adjust for spacing */
 }
-.row.grid-5 .product-card {
+.products .row.grid-5 .product-card {
   width: calc(20% - 15px); /* Adjust for spacing */
   margin: 7.5px; /* Adjust for spacing */
 }
-.row.list-view {
+.products .row.list-view {
   flex-direction: column;
 }
-.row.list-view .list-item {
+.products .row.list-view .list-item {
   margin-bottom: 15px;
 }
-
-.card {
+.products .card {
   background-color: #ffffff;
   border-radius: 5px;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
 }
-.card:hover {
+.products .card:hover {
+  margin-bottom: 5px;
   transform: scale(1.05);
 }
-.card .card-body {
-  padding: 20px;
+.products .card:hover img {
+  transform: translateY(-10px); /* Move image up 10px */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3); /* Adds shadow below */
 }
-.card .card-body h5.card-title {
+.products .card:hover .card-body .btn {
+  height: 40px; /* Adjust based on desired height */
+  padding: 10px; /* Adjust padding as needed */
+}
+.products .card .card-body {
+  padding: 0px;
+}
+.products .card .card-body h5.card-title {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
   color: #007bff;
   font-weight: bold;
 }
-.card .card-body p.card-text {
+.products .card .card-body p.card-text {
+  padding-left: 10px;
+  padding-right: 10px;
   margin-bottom: 5px;
 }
-
-.carousel-item .row {
+.products .card .card-body .btn {
+  width: 100%; /* Full width */
+  height: 0; /* Initial height */
+  overflow: hidden; /* Hide text before hover */
+  transition: height 0.4s ease; /* Smooth transition for height */
+  padding: 0; /* Remove padding to keep it compact when collapsed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+}
+.products .carousel-item .row {
   display: flex;
   justify-content: center;
   text-align: center;
   padding: 20px;
 }
-.carousel-item .row div {
+.products .carousel-item .row div {
   background-color: #007bff;
   color: white;
   margin: 10px;
@@ -100,4 +135,4 @@ input[type=range] {
   #layoutList {
     display: none; /* Hide layout buttons on small screens */
   }
-}/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=ShopStyle.css.map */
