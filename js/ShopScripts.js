@@ -228,14 +228,6 @@ $(document).ready(function () {
     },
   ];
 
-  // Sample data array representing product details images
-  const productDetailsImages = [
-    { Id: 1, ImageUrl: "assets/Apple Mac Studio.jpg", ProductsId: 1 },
-    { Id: 2, ImageUrl: "assets/Apple Mac Studio.jpg", ProductsId: 1 },
-    { Id: 3, ImageUrl: "assets/Apple Mac Studio.jpg", ProductsId: 1 },
-    { Id: 4, ImageUrl: "assets/Apple Mac Studio.jpg", ProductsId: 1 },
-    // Add more objects as needed
-  ];
   // Sort Products
   function sortProducts(products, criteria) {
     switch (criteria) {
@@ -272,77 +264,100 @@ $(document).ready(function () {
     }
   }
 
-  // Dynamically populate filters based on product data
   function populateFilters() {
     const processorOptions = getUniqueValues("processor");
     const categoryOptions = getUniqueValues("categoriesId");
-    const colorOptions = getUniqueValues("color"); // assuming products have color
+    const colorOptions = getUniqueValues("color");
     const ramOptions = getUniqueValues("ramSize");
     const screenSizeOptions = getUniqueValues("ScreenSize");
     const storageOptions = getUniqueValues("storage");
-
+  
     const filterHTML = `
-      <!-- category Filter -->
-    <label for="categoryFilter">Category:</label>
-    <select id="categoryFilter" class="form-select w-25">
-      <option value="all">All</option>
-      ${categoryOptions
-        .map((categ) => `<option value="${categ.Id}">${categ.name}</option>`)
-        .join("")}
-    </select>
-    <!-- Processor Filter -->
-    <label for="processorFilter">Processor:</label>
-    <select id="processorFilter" class="form-select w-25">
-      <option value="all">All</option>
-      ${processorOptions
-        .map((proc) => `<option value="${proc}">${proc}</option>`)
-        .join("")}
-    </select>
-    <!-- Price Filter -->
-          <label for="priceRange">Price Range:</label>
-          <input type="range" id="priceRange" min="0" max="2000" step="100" class="form-range w-25">
-          <span id="priceValue">0 - 2000</span>
-
-          <!-- Color Filter -->
-          <label for="colorFilter">Color:</label>
-          <select id="colorFilter" class="form-select w-25">
-            <option value="all">All</option>
-            ${colorOptions
-              .map((color) => `<option value="${color}">${color}</option>`)
-              .join("")}
-          </select>
-
-          <!-- RAM Filter -->
-          <label for="ramFilter">RAM:</label>
-          <select id="ramFilter" class="form-select w-25">
-            <option value="all">All</option>
-            ${ramOptions
-              .map((ram) => `<option value="${ram}">${ram} GB</option>`)
-              .join("")}
-          </select>
-
-          <!-- Screen Size Filter -->
-          <label for="screenSizeFilter">Screen Size:</label>
-          <select id="screenSizeFilter" class="form-select w-25">
-            <option value="all">All</option>
-            ${screenSizeOptions
-              .map((size) => `<option value="${size}">${size} inch</option>`)
-              .join("")}
-          </select>
-
-          <!-- Storage Filter -->
-          <label for="storageFilter">Storage:</label>
-          <select id="storageFilter" class="form-select w-25">
-            <option value="all">All</option>
-            ${storageOptions
-              .map(
-                (storage) => `<option value="${storage}">${storage} GB</option>`
-              )
-              .join("")}
-          </select>
-  `;
+      <!-- Category Filter -->
+      <label for="categoryFilter">Category:</label>
+      <select id="categoryFilter" class="form-select w-25">
+        <option value="all">All</option>
+        ${categoryOptions
+          .map((categ) => `<option value="${categ.Id}">${categ.name}</option>`)
+          .join("")}
+      </select>
+  
+      <!-- Processor Filter -->
+      <label for="processorFilter">Processor:</label>
+      <select id="processorFilter" class="form-select w-25">
+        <option value="all">All</option>
+        ${processorOptions
+          .map((proc) => `<option value="${proc}">${proc}</option>`)
+          .join("")}
+      </select>
+  
+      <!-- Price Filter -->
+      <label>Price Range:</label>
+      <div class="price-range-container">
+        <input type="range" id="minPrice" min="0" max="2000" step="100" value="0" class="form-range w-25">
+        <input type="range" id="maxPrice" min="0" max="2000" step="100" value="2000" class="form-range w-25">
+        <div class="price-values">
+          <span id="priceMinValue">$0</span> - <span id="priceMaxValue">$2000</span>
+        </div>
+      </div>
+  
+      <!-- Color Filter -->
+      <label for="colorFilter">Color:</label>
+      <select id="colorFilter" class="form-select w-25">
+        <option value="all">All</option>
+        ${colorOptions.map((color) => `<option value="${color}">${color}</option>`).join("")}
+      </select>
+  
+      <!-- RAM Filter -->
+      <label for="ramFilter">RAM:</label>
+      <select id="ramFilter" class="form-select w-25">
+        <option value="all">All</option>
+        ${ramOptions.map((ram) => `<option value="${ram}">${ram} GB</option>`).join("")}
+      </select>
+  
+      <!-- Screen Size Filter -->
+      <label for="screenSizeFilter">Screen Size:</label>
+      <select id="screenSizeFilter" class="form-select w-25">
+        <option value="all">All</option>
+        ${screenSizeOptions.map((size) => `<option value="${size}">${size} inch</option>`).join("")}
+      </select>
+  
+      <!-- Storage Filter -->
+      <label for="storageFilter">Storage:</label>
+      <select id="storageFilter" class="form-select w-25">
+        <option value="all">All</option>
+        ${storageOptions.map((storage) => `<option value="${storage}">${storage} GB</option>`).join("")}
+      </select>
+    `;
+  
     $("#dynamicFilters").html(filterHTML);
-  }
+  
+    // Initialize the multi-range functionality for price
+    const minPriceSlider = document.getElementById("minPrice");
+    const maxPriceSlider = document.getElementById("maxPrice");
+    const priceMinValue = document.getElementById("priceMinValue");
+    const priceMaxValue = document.getElementById("priceMaxValue");
+  
+    function updatePriceRange() {
+      const minValue = parseInt(minPriceSlider.value);
+      const maxValue = parseInt(maxPriceSlider.value);
+  
+      if (minValue > maxValue - 100) {
+        minPriceSlider.value = maxValue - 100;
+      }
+      if (maxValue < minValue + 100) {
+        maxPriceSlider.value = minValue + 100;
+      }
+  
+      priceMinValue.textContent = `$${minPriceSlider.value}`;
+      priceMaxValue.textContent = `$${maxPriceSlider.value}`;
+    }
+  
+    minPriceSlider.addEventListener("input", updatePriceRange);
+    maxPriceSlider.addEventListener("input", updatePriceRange);
+  
+    updatePriceRange(); // Initialize values on load
+  }  
 
   // Function to set product grid class based on selected layout
   function setGridLayout(newLayout) {
@@ -504,3 +519,14 @@ $(document).ready(function () {
     checkScreenSize();
   });
 });
+
+{/* <input type="text" class="js-range-slider" name="my_range" value=""
+data-skin="round"
+data-type="double"
+data-min="0"
+data-max="1000"
+data-grid="false"
+/>
+
+<input type="number" maxlength="4" value="0" class="from"/>
+<input type="number" maxlength="4" value="1000" class="to"/> */}

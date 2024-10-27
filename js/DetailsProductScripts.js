@@ -408,9 +408,6 @@ function loadProductDetails() {
   if (product) {
     document.getElementById("mainImage").src = product.imageUrl;
     document.getElementById("productName").innerText = product.Name;
-    document.getElementById("availability").innerText = product.soldOut
-      ? "Sold Out"
-      : "Available in stock";
     document.getElementById("productPrice").innerText = `£${(
       product.oldPrice *
       (1 - product.discount / 100)
@@ -418,10 +415,8 @@ function loadProductDetails() {
     document.getElementById(
       "oldPrice"
     ).innerText = `£${product.oldPrice.toFixed(2)}`;
-    document.getElementById("productDescription").innerText =
-      product.model + " - " + product.OS;
 
-     // Load product information
+    // Load product information
     const informationList = document.getElementById("informationContent");
     informationList.innerHTML = ""; // Clear existing information
     informationList.innerHTML += `<li><strong>Model:</strong> ${product.model}</li>`;
@@ -456,43 +451,53 @@ function loadRelatedProducts(categoryId) {
     relatedProductsContainer.innerHTML = "<p>No related products found.</p>";
     return;
   }
+  createCarousel(relatedProducts);
 
-  const itemsPerSlide = 4; // Change this based on the number of items you want per slide on large screens
+}
+function createCarousel(relatedProducts) {
+  const screenWidth = window.innerWidth;
+  const itemsPerSlide = screenWidth >= 768 ? 3 : 1; // 3 items on large screens, 1 item on small screens
   const totalSlides = Math.ceil(relatedProducts.length / itemsPerSlide);
+
+  // Clear previous carousel items if any
+  relatedProductsContainer.innerHTML = "";
 
   for (let i = 0; i < totalSlides; i++) {
     const slideDiv = document.createElement("div");
-    slideDiv.className = "carousel-item" + (i === 0 ? " active" : ""); // Make the first slide active
+    slideDiv.className = "carousel-item" + (i === 0 ? " active" : "");
 
     const rowDiv = document.createElement("div");
-    rowDiv.className = "row";
+    rowDiv.className = "row justify-content-center";
 
     for (let j = 0; j < itemsPerSlide; j++) {
       const productIndex = i * itemsPerSlide + j;
       if (productIndex < relatedProducts.length) {
         const product = relatedProducts[productIndex];
         const productCard = `
-            <div class="col-md-3 col-6"> <!-- 3 columns on medium/large screens, 1 column on small screens -->
-              <div class="card">
-                <img src="${product.imageUrl}" class="card-img-top" alt="${
+          <div class="col-12 ${
+            itemsPerSlide === 3 ? "col-md-4" : ""
+          } mb-3"> <!-- Full width on small screens, 1/3 on medium/large screens -->
+            <div class="card">
+              <img src="${product.imageUrl}" class="card-img-top" alt="${
           product.Name
         }" />
-                <div class="card-body">
-                  <h5 class="card-title">${product.Name}</h5>
-                  <p class="card-text">£${(
-                    product.oldPrice *
-                    (1 - product.discount / 100)
-                  ).toFixed(2)}</p>
-                </div>
+              <div class="card-body">
+                <h5 class="card-title">${product.Name}</h5>
+                <p class="card-text">£${(
+                  product.oldPrice *
+                  (1 - product.discount / 100)
+                ).toFixed(2)}</p>
               </div>
-            </div>`;
-        rowDiv.innerHTML += productCard; // Append the card to the row
+            </div>
+          </div>`;
+        rowDiv.innerHTML += productCard;
       }
     }
-    slideDiv.appendChild(rowDiv); // Append the row to the slide
-    relatedProductsContainer.appendChild(slideDiv); // Append the slide to the carousel inner
+    slideDiv.appendChild(rowDiv);
+    relatedProductsContainer.appendChild(slideDiv);
   }
 }
 
 // Load product details on page load
 window.onload = loadProductDetails;
+window.addEventListener("resize", loadProductDetails);
