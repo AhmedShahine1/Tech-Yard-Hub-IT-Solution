@@ -13,7 +13,7 @@ body {
   color: grey;
 }
 .in-stock {
-  color: green;
+  color: rgb(128, 107, 0);
 }
 .color-box {
   display: inline-block;
@@ -23,7 +23,7 @@ body {
   border: 1px solid #ccc;
 }
 .color-box.active {
-  border-color: green;
+  border-color: rgb(128, 107, 0);
 }
 .size-box {
   display: inline-block;
@@ -33,14 +33,14 @@ body {
   cursor: pointer;
 }
 .size-box.active {
-  border-color: green;
+  border-color: rgb(128, 107, 0);
 }
 .btn-green {
-  background-color: #8bc34a;
+  background-color: rgb(128, 107, 0);
   color: white;
 }
 .btn-green:hover {
-  background-color: #7cb342;
+  background-color: rgb(165, 146, 51);
 }
 .social-icons a {
   color: #555;
@@ -69,7 +69,7 @@ body {
   font-size: 12px;
 }
 .related-products .badge.sale {
-  background-color: #8dc63f;
+  background-color: rgb(128, 107, 0);
 }
 .related-products .badge.new {
   background-color: #e74c3c;
@@ -95,8 +95,8 @@ body {
       }
 
       &.active {
-        color: #76b852;
-        border-left: 3px solid #76b852;
+        color: rgb(128, 107, 0);
+        border-left: 3px solid rgb(128, 107, 0);
         background: #f9f9f9;
       }
     }

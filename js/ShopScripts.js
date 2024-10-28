@@ -1,3 +1,5 @@
+import { CategoriesAPI, ProductsAPI } from "../js/api.js";
+
 $(document).ready(function () {
   // Define an array of carousel data
   const carouselData = [
@@ -59,183 +61,20 @@ $(document).ready(function () {
     wrap: true, // Enable continuous cycling
   });
 });
-$(document).ready(function () {
+$(document).ready(async function () {
   let layout = "3"; // Default layout
+  const categories = await CategoriesAPI.getAllCategories();
 
-  // Define all product data
-  const allProducts = [
-    {
-      Id: 1,
-      Name: "Dell XPS 13",
-      imageUrl: "assets/Apple Mac Studio.jpg",
-      imageUrlInHover: "assets/Dell_XPS_13_hover.jpg",
-      oldPrice: 1600,
-      discount: 10,
-      soldOut: false,
-      popular: true,
-      model: "XPS 13",
-      OS: "Windows 10",
-      categoriesId: 1,
-      processor: "Intel Core i7",
-      graphicCard: "Intel Iris Xe",
-      storage: 512,
-      ramSize: 16,
-      ramType: "DDR4",
-      dimensions: "302 x 199 x 15 mm",
-      weight: "1.2 kg",
-      ScreenSize: 13,
-      rating: 4.5,
-      sales: 300,
-    },
-    {
-      Id: 2,
-      Name: "MacBook Air",
-      imageUrl: "assets/Apple Mac Studio.jpg",
-      imageUrlInHover: "assets/MacBook_Air_hover.jpg",
-      oldPrice: 1260,
-      discount: 5,
-      soldOut: false,
-      popular: true,
-      model: "MacBook Air M1",
-      OS: "macOS Big Sur",
-      categoriesId: 1,
-      processor: "Apple M1",
-      graphicCard: "Integrated 7-core GPU",
-      storage: 256,
-      ramSize: 8,
-      ramType: "Unified",
-      dimensions: "304 x 212 x 16 mm",
-      weight: "1.29 kg",
-      ScreenSize: 13,
-      rating: 4.7,
-      sales: 500,
-    },
-    {
-      Id: 3,
-      Name: "Samsung Galaxy S21",
-      imageUrl: "assets/Apple Mac Studio.jpg",
-      imageUrlInHover: "assets/Samsung_Galaxy_S21_hover.jpg",
-      oldPrice: 850,
-      discount: 0,
-      soldOut: false,
-      popular: false,
-      model: "Galaxy S21",
-      OS: "Android 11",
-      categoriesId: 2,
-      processor: "Exynos 2100",
-      graphicCard: "Mali-G78 MP14",
-      storage: 128,
-      ramSize: 8,
-      ramType: "LPDDR5",
-      dimensions: "151.7 x 71.2 x 7.9 mm",
-      weight: "169 g",
-      ScreenSize: 6.2,
-      rating: 4.3,
-      sales: 150,
-    },
-    {
-      Id: 4,
-      Name: "Sofa Set",
-      imageUrl: "assets/Apple Mac Studio.jpg",
-      imageUrlInHover: "assets/Sofa_Set_hover.jpg",
-      oldPrice: 1125,
-      discount: 20,
-      soldOut: false,
-      popular: false,
-      model: "Classic Sofa",
-      OS: "",
-      categoriesId: 3,
-      processor: "",
-      graphicCard: "",
-      storage: "",
-      ramSize: "",
-      ramType: "",
-      dimensions: "200 x 85 x 90 cm",
-      weight: "40 kg",
-      ScreenSize: "",
-      rating: 4.0,
-      sales: 75,
-    },
-    {
-      Id: 5,
-      Name: "Lenovo ThinkPad X1",
-      imageUrl: "assets/Apple Mac Studio.jpg",
-      imageUrlInHover: "assets/Lenovo_ThinkPad_X1_hover.jpg",
-      oldPrice: 1650,
-      discount: 15,
-      soldOut: false,
-      popular: true,
-      model: "ThinkPad X1 Carbon",
-      OS: "Windows 10 Pro",
-      categoriesId: 1,
-      processor: "Intel Core i7",
-      graphicCard: "Intel UHD Graphics",
-      storage: 512,
-      ramSize: 16,
-      ramType: "LPDDR3",
-      dimensions: "323 x 217 x 14.9 mm",
-      weight: "1.09 kg",
-      ScreenSize: 14,
-      rating: 4.6,
-      sales: 200,
-    },
-    {
-      Id: 6,
-      Name: "LG OLED TV",
-      imageUrl: "assets/Apple Mac Studio.jpg",
-      imageUrlInHover: "assets/LG_OLED_TV_hover.jpg",
-      oldPrice: 3000,
-      discount: 0,
-      soldOut: false,
-      popular: true,
-      model: "OLED55CXPUA",
-      OS: "webOS",
-      categoriesId: 4,
-      processor: "",
-      graphicCard: "",
-      storage: "",
-      ramSize: "",
-      ramType: "",
-      dimensions: "1228 x 706 x 47 mm",
-      weight: "18.9 kg",
-      ScreenSize: 55,
-      rating: 4.8,
-      sales: 120,
-    },
-  ];
-
-  // Example categories
-  const categories = [
-    {
-      Id: 1,
-      name: "Electronics",
-      imageUrl: "assets/electronics.jpg",
-    },
-    {
-      Id: 2,
-      name: "Mobile Phones",
-      imageUrl: "assets/mobile_phones.jpg",
-    },
-    {
-      Id: 3,
-      name: "Furniture",
-      imageUrl: "assets/furniture.jpg",
-    },
-    {
-      Id: 4,
-      name: "Television",
-      imageUrl: "assets/television.jpg",
-    },
-  ];
+  const allProducts = await ProductsAPI.getAllProducts();
 
   function getMinMaxPrice(products) {
     let minPrice = Infinity;
     let maxPrice = -Infinity;
-  
-    products.forEach(product => {
+
+    products.forEach((product) => {
       // Calculate the effective price after applying any discount
       const effectivePrice = product.oldPrice * (1 - product.discount / 100);
-  
+
       // Update minPrice and maxPrice based on effectivePrice
       if (effectivePrice < minPrice) {
         minPrice = effectivePrice;
@@ -244,12 +83,12 @@ $(document).ready(function () {
         maxPrice = effectivePrice;
       }
     });
-  
+
     return { minPrice, maxPrice };
   }
-  
+
   // Usage
-  const { minPrice, maxPrice } = getMinMaxPrice(allProducts); 
+  const { minPrice, maxPrice } = getMinMaxPrice(allProducts);
 
   // Sort Products
   function sortProducts(products, criteria) {
@@ -275,7 +114,7 @@ $(document).ready(function () {
         ...new Set(
           allProducts.map((product) => {
             const category = categories.find(
-              (cat) => cat.Id === product.categoriesId
+              (cat) => cat.id === product.categoriesId
             );
             return category ? category : null;
           })
@@ -301,7 +140,7 @@ $(document).ready(function () {
       <select id="categoryFilter" class="form-select">
         <option value="all">All</option>
         ${categoryOptions
-          .map((categ) => `<option value="${categ.Id}">${categ.name}</option>`)
+          .map((categ) => `<option value="${categ.id}">${categ.name}</option>`)
           .join("")}
       </select>
   
@@ -358,7 +197,7 @@ $(document).ready(function () {
 
     $("#dynamicFilters").html(filterHTML);
   }
-  
+
   function setrange() {
     $("#priceRange").ionRangeSlider({
       type: "double",
@@ -373,10 +212,10 @@ $(document).ready(function () {
       onFinish: function (data) {
         // Call displayProducts with the selected price range
         displayProducts(allProducts, data.from, data.to);
-      }
+      },
     });
   }
-  
+
   // Function to set product grid class based on selected layout
   function setGridLayout(newLayout) {
     layout = newLayout;
@@ -392,7 +231,11 @@ $(document).ready(function () {
   }
 
   // Function to display products based on selected filters
-  function displayProducts(products = allProducts, minPrice = 0, maxPrice = Infinity) {
+  function displayProducts(
+    products = allProducts,
+    minPrice = 0,
+    maxPrice = Infinity
+  ) {
     const processor = $("#processorFilter").val();
     const category = $("#categoryFilter").val();
     const color = $("#colorFilter").val();
@@ -404,14 +247,15 @@ $(document).ready(function () {
 
     products.forEach((product) => {
       let showProduct = true;
-    // Calculate the effective price with discount
-    const effectivePrice = product.oldPrice * (1 - product.discount / 100);
+      // Calculate the effective price with discount
+      const effectivePrice = product.oldPrice * (1 - product.discount / 100);
       // Filter conditions
       if (processor !== "all" && product.processor !== processor)
         showProduct = false;
       if (category !== "all" && product.categoriesId != category)
         showProduct = false;
-      if (effectivePrice < minPrice || effectivePrice > maxPrice) showProduct = false;
+      if (effectivePrice < minPrice || effectivePrice > maxPrice)
+        showProduct = false;
       if (color !== "all" && product.color !== color) showProduct = false;
       if (ram !== "all" && product.ramSize != ram) showProduct = false;
       if (screenSize !== "all" && product.ScreenSize != screenSize)
@@ -430,7 +274,7 @@ $(document).ready(function () {
           product.Name
         }">
             <div class="card-body">
-              <h5 class="card-title">${product.Name}</h5>
+              <h5 class="card-title">${product.name}</h5>
               <p class="card-text">
                 Price: ${
                   hasDiscount
@@ -447,8 +291,8 @@ $(document).ready(function () {
                   ? `<p class="card-text text-success">Discount: ${product.discount}%</p>`
                   : ""
               }
-              <p class="card-text">Rating: ${product.rating} ⭐</p>
-              <p class="card-text">Sales: ${product.sales}</p>
+              <p class="card-text">model: ${product.model}</p>
+              <p class="card-text">os: ${product.os}</p>
               <div class="d-flex justify-content-between">
                 <a href="#" class="btn btn-primary w-100 mx-1" style="animation: heightChange 0.3s ease;">Add to Cart</a>
                 <a href="DetailsProduct.html?id=${
@@ -509,16 +353,16 @@ $(document).ready(function () {
     displayProducts(sortedProducts);
   });
 
-// Show and hide sidebar when "Filter" button is clicked
-$("#filterToggle").on("click", function () {
-  $("#sidebarFilter").toggle();
-  setrange();
-});
+  // Show and hide sidebar when "Filter" button is clicked
+  $("#filterToggle").on("click", function () {
+    $("#sidebarFilter").toggle();
+    setrange();
+  });
 
-// Hide sidebar when "X" button is clicked
-$("#closeSidebar").on("click", function () {
-  $("#sidebarFilter").hide();
-});
+  // Hide sidebar when "X" button is clicked
+  $("#closeSidebar").on("click", function () {
+    $("#sidebarFilter").hide();
+  });
 
   function checkScreenSize() {
     const windowWidth = $(window).width();
@@ -538,3 +382,7 @@ $("#closeSidebar").on("click", function () {
     checkScreenSize();
   });
 });
+
+
+
+
