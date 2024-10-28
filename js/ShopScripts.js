@@ -228,6 +228,29 @@ $(document).ready(function () {
     },
   ];
 
+  function getMinMaxPrice(products) {
+    let minPrice = Infinity;
+    let maxPrice = -Infinity;
+  
+    products.forEach(product => {
+      // Calculate the effective price after applying any discount
+      const effectivePrice = product.oldPrice * (1 - product.discount / 100);
+  
+      // Update minPrice and maxPrice based on effectivePrice
+      if (effectivePrice < minPrice) {
+        minPrice = effectivePrice;
+      }
+      if (effectivePrice > maxPrice) {
+        maxPrice = effectivePrice;
+      }
+    });
+  
+    return { minPrice, maxPrice };
+  }
+  
+  // Usage
+  const { minPrice, maxPrice } = getMinMaxPrice(allProducts); 
+
   // Sort Products
   function sortProducts(products, criteria) {
     switch (criteria) {
@@ -271,11 +294,11 @@ $(document).ready(function () {
     const ramOptions = getUniqueValues("ramSize");
     const screenSizeOptions = getUniqueValues("ScreenSize");
     const storageOptions = getUniqueValues("storage");
-  
+
     const filterHTML = `
       <!-- Category Filter -->
       <label for="categoryFilter">Category:</label>
-      <select id="categoryFilter" class="form-select w-25">
+      <select id="categoryFilter" class="form-select">
         <option value="all">All</option>
         ${categoryOptions
           .map((categ) => `<option value="${categ.Id}">${categ.name}</option>`)
@@ -284,7 +307,7 @@ $(document).ready(function () {
   
       <!-- Processor Filter -->
       <label for="processorFilter">Processor:</label>
-      <select id="processorFilter" class="form-select w-25">
+      <select id="processorFilter" class="form-select">
         <option value="all">All</option>
         ${processorOptions
           .map((proc) => `<option value="${proc}">${proc}</option>`)
@@ -292,73 +315,68 @@ $(document).ready(function () {
       </select>
   
       <!-- Price Filter -->
-      <label>Price Range:</label>
-      <div class="price-range-container">
-        <input type="range" id="minPrice" min="0" max="2000" step="100" value="0" class="form-range w-25">
-        <input type="range" id="maxPrice" min="0" max="2000" step="100" value="2000" class="form-range w-25">
-        <div class="price-values">
-          <span id="priceMinValue">$0</span> - <span id="priceMaxValue">$2000</span>
-        </div>
-      </div>
-  
+      <!-- Price Range Filter -->
+      <label for="priceRange">Price Range:</label>
+      <input type="text" id="priceRange" name="price" value="" />
+
       <!-- Color Filter -->
       <label for="colorFilter">Color:</label>
-      <select id="colorFilter" class="form-select w-25">
+      <select id="colorFilter" class="form-select">
         <option value="all">All</option>
-        ${colorOptions.map((color) => `<option value="${color}">${color}</option>`).join("")}
+        ${colorOptions
+          .map((color) => `<option value="${color}">${color}</option>`)
+          .join("")}
       </select>
   
       <!-- RAM Filter -->
       <label for="ramFilter">RAM:</label>
-      <select id="ramFilter" class="form-select w-25">
+      <select id="ramFilter" class="form-select">
         <option value="all">All</option>
-        ${ramOptions.map((ram) => `<option value="${ram}">${ram} GB</option>`).join("")}
+        ${ramOptions
+          .map((ram) => `<option value="${ram}">${ram} GB</option>`)
+          .join("")}
       </select>
   
       <!-- Screen Size Filter -->
       <label for="screenSizeFilter">Screen Size:</label>
-      <select id="screenSizeFilter" class="form-select w-25">
+      <select id="screenSizeFilter" class="form-select">
         <option value="all">All</option>
-        ${screenSizeOptions.map((size) => `<option value="${size}">${size} inch</option>`).join("")}
+        ${screenSizeOptions
+          .map((size) => `<option value="${size}">${size} inch</option>`)
+          .join("")}
       </select>
   
       <!-- Storage Filter -->
       <label for="storageFilter">Storage:</label>
-      <select id="storageFilter" class="form-select w-25">
+      <select id="storageFilter" class="form-select">
         <option value="all">All</option>
-        ${storageOptions.map((storage) => `<option value="${storage}">${storage} GB</option>`).join("")}
+        ${storageOptions
+          .map((storage) => `<option value="${storage}">${storage} GB</option>`)
+          .join("")}
       </select>
     `;
-  
-    $("#dynamicFilters").html(filterHTML);
-  
-    // Initialize the multi-range functionality for price
-    const minPriceSlider = document.getElementById("minPrice");
-    const maxPriceSlider = document.getElementById("maxPrice");
-    const priceMinValue = document.getElementById("priceMinValue");
-    const priceMaxValue = document.getElementById("priceMaxValue");
-  
-    function updatePriceRange() {
-      const minValue = parseInt(minPriceSlider.value);
-      const maxValue = parseInt(maxPriceSlider.value);
-  
-      if (minValue > maxValue - 100) {
-        minPriceSlider.value = maxValue - 100;
-      }
-      if (maxValue < minValue + 100) {
-        maxPriceSlider.value = minValue + 100;
-      }
-  
-      priceMinValue.textContent = `$${minPriceSlider.value}`;
-      priceMaxValue.textContent = `$${maxPriceSlider.value}`;
-    }
-  
-    minPriceSlider.addEventListener("input", updatePriceRange);
-    maxPriceSlider.addEventListener("input", updatePriceRange);
-  
-    updatePriceRange(); // Initialize values on load
-  }  
 
+    $("#dynamicFilters").html(filterHTML);
+  }
+  
+  function setrange() {
+    $("#priceRange").ionRangeSlider({
+      type: "double",
+      min: minPrice - 50,
+      max: maxPrice + 50,
+      from: minPrice,
+      to: maxPrice,
+      step: 50,
+      prefix: "$",
+      prettify_enabled: true,
+      grid: true,
+      onFinish: function (data) {
+        // Call displayProducts with the selected price range
+        displayProducts(allProducts, data.from, data.to);
+      }
+    });
+  }
+  
   // Function to set product grid class based on selected layout
   function setGridLayout(newLayout) {
     layout = newLayout;
@@ -374,10 +392,9 @@ $(document).ready(function () {
   }
 
   // Function to display products based on selected filters
-  function displayProducts(products = allProducts) {
+  function displayProducts(products = allProducts, minPrice = 0, maxPrice = Infinity) {
     const processor = $("#processorFilter").val();
     const category = $("#categoryFilter").val();
-    const priceRange = $("#priceRange").val();
     const color = $("#colorFilter").val();
     const ram = $("#ramFilter").val();
     const screenSize = $("#screenSizeFilter").val();
@@ -387,13 +404,14 @@ $(document).ready(function () {
 
     products.forEach((product) => {
       let showProduct = true;
-
+    // Calculate the effective price with discount
+    const effectivePrice = product.oldPrice * (1 - product.discount / 100);
       // Filter conditions
       if (processor !== "all" && product.processor !== processor)
         showProduct = false;
       if (category !== "all" && product.categoriesId != category)
         showProduct = false;
-      if (priceRange && product.oldPrice > priceRange) showProduct = false;
+      if (effectivePrice < minPrice || effectivePrice > maxPrice) showProduct = false;
       if (color !== "all" && product.color !== color) showProduct = false;
       if (ram !== "all" && product.ramSize != ram) showProduct = false;
       if (screenSize !== "all" && product.ScreenSize != screenSize)
@@ -490,16 +508,17 @@ $(document).ready(function () {
     const sortedProducts = sortProducts([...allProducts], sortValue);
     displayProducts(sortedProducts);
   });
-  // Update the price range display
-  $("#priceRange").on("input", function () {
-    const rangeVal = $(this).val();
-    $("#priceValue").text(`0 - ${rangeVal}`);
-  });
 
-  // Toggle Filter Section
-  $("#filterToggle").click(function () {
-    $("#filterContainer").toggle();
-  });
+// Show and hide sidebar when "Filter" button is clicked
+$("#filterToggle").on("click", function () {
+  $("#sidebarFilter").toggle();
+  setrange();
+});
+
+// Hide sidebar when "X" button is clicked
+$("#closeSidebar").on("click", function () {
+  $("#sidebarFilter").hide();
+});
 
   function checkScreenSize() {
     const windowWidth = $(window).width();
@@ -519,14 +538,3 @@ $(document).ready(function () {
     checkScreenSize();
   });
 });
-
-{/* <input type="text" class="js-range-slider" name="my_range" value=""
-data-skin="round"
-data-type="double"
-data-min="0"
-data-max="1000"
-data-grid="false"
-/>
-
-<input type="number" maxlength="4" value="0" class="from"/>
-<input type="number" maxlength="4" value="1000" class="to"/> */}

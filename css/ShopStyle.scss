@@ -31,12 +31,6 @@ body {
 .products {
   display: grid;
   margin: 10px;
-  #filterContainer {
-    background-color: $filter-bg;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
-  }
   .Filter {
     align-items: baseline;
     padding-right: 5%;
@@ -48,44 +42,81 @@ body {
     font-weight: bold;
     color: $primary-color;
   }
-  
+
   select,
   input[type="range"] {
     margin-top: 10px;
     margin-bottom: 20px;
   }
+  .irs--round .irs-bar {
+    background-color: #00C2C0;
+ }
+ 
+ .irs--round .irs-handle {
+   background-color: #00C2C0;
+   border-color: #00C2C0;
+   box-shadow: 0px 0px 0px 5px rgba(0, 194, 192, 0.2);
+ }
+ 
+ .irs--round .irs-handle.state_hover, 
+ .irs--round .irs-handle:hover {
+    background-color: #00C2C0;
+ }
+ 
+ .irs--round .irs-handle {
+   width: 16px;
+   height: 16px;
+   top: 29px
+ }
+ 
+ .irs--round .irs-from, 
+ .irs--round .irs-to, 
+ .irs--round .irs-single {
+   background-color: transparent;
+   color: #666666;
+ }
+ 
+ .irs--round .irs-from:before, 
+ .irs--round .irs-to:before, 
+ .irs--round .irs-single:before,
+ .irs--round .irs-min, 
+ .irs--round .irs-max {
+   display: none;
+ }
+ 
+ 
   #sortProducts {
     width: auto;
   }
   .row {
     display: flex;
     flex-wrap: wrap;
-  
+
     &.grid-3 .product-card {
       width: calc(33.33% - 15px); /* Adjust for spacing */
       margin: 7.5px; /* Adjust for spacing */
     }
-  
+
     &.grid-5 .product-card {
       width: calc(20% - 15px); /* Adjust for spacing */
       margin: 7.5px; /* Adjust for spacing */
     }
-  
+
     &.list-view {
       flex-direction: column;
-  
+
       .list-item {
         margin-bottom: 15px;
       }
     }
   }
-  
+
   .card {
     background-color: $card-bg;
     border-radius: $card-border-radius;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
-  
+
     &:hover {
       margin-bottom: 5px;
       transform: scale(1.05);
@@ -98,21 +129,21 @@ body {
         padding: 10px; /* Adjust padding as needed */
       }
     }
-  
+
     .card-body {
       padding: 0px;
-  
+
       h5.card-title {
         padding-left: 10px;
-        padding-right : 10px;
+        padding-right: 10px;
         padding-top: 10px;
         color: $primary-color;
         font-weight: bold;
       }
-  
+
       p.card-text {
         padding-left: 10px;
-        padding-right : 10px;
+        padding-right: 10px;
         margin-bottom: 5px;
       }
       .btn {
@@ -131,14 +162,14 @@ body {
       }
     }
   }
-  
+
   .carousel-item {
     .row {
       display: flex;
       justify-content: center;
       text-align: center;
       padding: 20px;
-  
+
       div {
         background-color: $primary-color;
         color: white;
@@ -149,8 +180,33 @@ body {
       }
     }
   }
-  
 }
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background-color: #f8f9fa;
+  border-left: 1px solid #ddd;
+  padding: 20px;
+  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.close-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  float: right;
+}
+
 @media (max-width: 768px) {
   .carousel-item {
     .row {
