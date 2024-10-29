@@ -296,7 +296,7 @@ $(document).ready(async function () {
               <div class="d-flex justify-content-between">
                 <a href="#" class="btn btn-primary w-100 mx-1" style="animation: heightChange 0.3s ease;">Add to Cart</a>
                 <a href="DetailsProduct.html?id=${
-                  product.Id
+                  product.id
                 }" class="btn btn-secondary w-100 mx-1" style="animation: heightChange 0.3s ease;">View Details</a>
               </div>
             </div>
